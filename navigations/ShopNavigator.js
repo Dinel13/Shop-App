@@ -9,12 +9,18 @@ import Color from "../constants/Color";
 const ProductNavigator = createStackNavigator(
   {
     ProductOverview: ProductOverScreen,
-    ProductDetail: ProductDeatilScreen
+    ProductDetail: ProductDeatilScreen,
   },
   {
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: Platform.OS === "android" ? Color.primary : "",
+      },
+      headerTitleStyle: {
+        fontFamily: "open-sans-bold",
+      },
+      headerBackTitleStyle: {
+        fontFamily: "open-sans",
       },
       headerTintColor: Platform.OS === "android" ? "white" : Color.primary,
     },

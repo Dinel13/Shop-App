@@ -45,8 +45,11 @@ const style = StyleSheet.create({
     color: "#888",
     textAlign: "center",
     marginVertical: 20,
+    fontFamily : 'open-sans-bold'
+
   },
   desc: {
+    fontFamily : 'open-sans',
     fontSize: 14,
     textAlign: "center",
     marginHorizontal :20
