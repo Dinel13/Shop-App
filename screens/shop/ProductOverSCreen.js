@@ -27,7 +27,7 @@ const ProductOverScreen = (props) => {
             });
           }}
           onAddToCart={() => {
-            dispatch(addToCart(itemData.item))
+            dispatch(addToCart(itemData.item));
             props.navigation.navigate("Cart");
           }}
         />
@@ -39,14 +39,24 @@ const ProductOverScreen = (props) => {
 ProductOverScreen.navigationOptions = (navData) => {
   return {
     headerTitle: "All Product",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButtonCustm}>
+        <Item
+          title="menu"
+          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButtonCustm}>
         <Item
           title="cart"
           iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
           onPress={() => {
-            navData.navigation.navigate("Cart")
-            console.log('dasd');;
+            navData.navigation.navigate("Cart");
           }}
         />
       </HeaderButtons>

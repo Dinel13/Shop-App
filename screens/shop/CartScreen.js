@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Color from "../../constants/Color";
 import { rempoveFromCart } from "../../store/action/actionCart";
+import { addOrder } from "../../store/action/actionOrder";
 import CartItem from "../../components/shop/CartItem";
 
 const CartScreen = (props) => {
@@ -34,6 +35,9 @@ const CartScreen = (props) => {
           color={Color.accent}
           title="ortder NOW"
           disabled={cartItems.length === 0}
+          onPress={() => {
+            dispatch(addOrder(cartItems, cartTotalAMount));
+          }}
         />
       </View>
       <View>
@@ -55,6 +59,10 @@ const CartScreen = (props) => {
     </View>
   );
 };
+
+CartScreen.navigationOption = {
+  headerTitle : 'Your Cart'
+}
 
 const style = StyleSheet.create({
   screen: {
