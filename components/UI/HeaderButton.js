@@ -4,7 +4,7 @@ import { HeaderButton } from "react-navigation-header-buttons";
 import { Ionicons } from "@expo/vector-icons";
 import Color from "../../constants/Color";
 
-const CistomBotton = (props) => {
+const CustomBotton = (props) => {
   return (
     <HeaderButton
       {...props}
@@ -14,3 +14,5 @@ const CistomBotton = (props) => {
     />
   );
 };
+
+export default CustomBotton;

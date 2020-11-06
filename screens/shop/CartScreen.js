@@ -1,20 +1,67 @@
-import React from 'react'
-import { StyleSheet, View, Text, FlatList} from 'react-native'
+import React from "react";
+import { StyleSheet, View, Text, FlatList, Button } from "react-native";
+import { useSelector } from "react-redux";
 
-const CartScreen = props => {
-    return (
-        <View style={style.screen} >
-            <FlatList >
-                
-            </FlatList>
-        </View>
-    )
-}
+import Color from "../../constants/Color";
+
+const CartScreen = (props) => {
+  const cartTotalAMount = useSelector((state) => state.cart.totalAmount);
+  const cartItems = useSelector((state) => {
+    const toArrayCart = [];
+    for (const key in state.cart.items) {
+      toArrayCart.push({
+        productId: key,
+        productTitle: state.cart.items[key].proTitle,
+        productPrice: state.cart.items[key].proPrice,
+        quantity: state.cart.items[key].quantity,
+        sum: state.cart.items[key].sum,
+      });
+    }
+    return toArrayCart
+  });
+
+
+  return (
+    <View style={style.screen}>
+      <FlatList></FlatList>
+      <View style={style.sumary}>
+        <Text style={style.texSumary}>
+          Total : <Text style={style.textAmount}>${cartTotalAMount}</Text>
+        </Text>
+        <Button color={Color.accent} title="ortder NOW" disabled={cartItems.length === 0} />
+      </View>
+      <View>
+        <Text>dasd</Text>
+      </View>
+    </View>
+  );
+};
 
 const style = StyleSheet.create({
-    screen : {
-        flex: 1
-    }
-})
+  screen: {
+    margin: 20,
+  },
+  sumary: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+    padding: 10,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.26,
+    shadowRadius: 8,
+    elevation: 5,
+    borderRadius: 10,
+    backgroundColor: "white",
+  },
+  texSumary: {
+    fontFamily: "open-sans-bold",
+    fontSize: 18,
+  },
+  totalAmount: {
+    color: Color.accent,
+  },
+});
 
-export default CartScreen
+export default CartScreen;

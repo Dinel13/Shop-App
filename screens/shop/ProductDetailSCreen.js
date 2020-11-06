@@ -8,7 +8,9 @@ import {
   Button,
 } from "react-native";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart, ADD_TO_CART } from "../../store/action/actionCart";
+
 import Color from "../../constants/Color";
 
 const ProductDetailSCreen = (props) => {
@@ -18,11 +20,19 @@ const ProductDetailSCreen = (props) => {
     state.products.availableProduct.find((prod) => prod.id === productId)
   );
 
+  const dispatch = useDispatch();
+
   return (
     <ScrollView>
       <Image style={style.image} source={{ uri: selectedProduct.imageUrl }} />
       <View style={style.button}>
-        <Button color={Color.primary} title="add to cart" onPress={() => {}} />
+        <Button
+          color={Color.primary}
+          title="add to cart"
+          onPress={() => {
+            dispatch(addToCart(selectedProduct))
+          }}
+        />
       </View>
       <Text style={style.price}>${selectedProduct.price}</Text>
       <Text style={style.desc}>{selectedProduct.description}</Text>
@@ -45,18 +55,17 @@ const style = StyleSheet.create({
     color: "#888",
     textAlign: "center",
     marginVertical: 20,
-    fontFamily : 'open-sans-bold'
-
+    fontFamily: "open-sans-bold",
   },
   desc: {
-    fontFamily : 'open-sans',
+    fontFamily: "open-sans",
     fontSize: 14,
     textAlign: "center",
-    marginHorizontal :20
+    marginHorizontal: 20,
   },
   button: {
-      marginVertical :10,
-      alignItems: 'center'
+    marginVertical: 10,
+    alignItems: "center",
   },
 });
 

@@ -27,7 +27,8 @@ const ProductOverScreen = (props) => {
             });
           }}
           onAddToCart={() => {
-            dispatch(addToCart(itemData.item));
+            dispatch(addToCart(itemData.item))
+            props.navigation.navigate("Cart");
           }}
         />
       )}
@@ -35,9 +36,22 @@ const ProductOverScreen = (props) => {
   );
 };
 
-ProductOverScreen.navigationOptions = {
-  headerTitle: "All Product",
-
+ProductOverScreen.navigationOptions = (navData) => {
+  return {
+    headerTitle: "All Product",
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButtonCustm}>
+        <Item
+          title="cart"
+          iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+          onPress={() => {
+            navData.navigation.navigate("Cart")
+            console.log('dasd');;
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
 };
 
 export default ProductOverScreen;

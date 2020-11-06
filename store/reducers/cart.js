@@ -16,14 +16,14 @@ export default (state = initalState, action) => {
 
       if (state.items[addedProduct.id]) {
         //product sudah ada di cart
-        const updateOrNewCartItem = new CartItem(
+        updateOrNewCartItem = new CartItem(
           state.items[addedProduct.id].quantity + 1,
           productPrice,
           productTitle,
           state.items[addedProduct.id].sum + productPrice
         );
       } else {
-        const updateOrNewCartItem = new CartItem(
+        updateOrNewCartItem = new CartItem(
           1,
           productPrice,
           productTitle,
