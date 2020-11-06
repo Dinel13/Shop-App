@@ -1,14 +1,6 @@
-export const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
-export const SET_FILTER = 'SET_FILTER'
+export const DELETE_PRODUCT =" DELETE_PROCUT"
 
-export const toggleFavorite = (id) => {
+export const deleteProduct = (productid) => {
     return {
-        type:  TOGGLE_FAVORITE, mealId : id
-    }
-}
-
-export const setFilter = filterSetting => {
-    return {
-        type:  SET_FILTER, filter : filterSetting
-    }
+        type: DELETE_PRODUCT , pid : productid    }
 }

@@ -7,7 +7,7 @@ import HeaderButtonCustm from "../../components/UI/HeaderButton";
 import OrderItem from "../../components/shop/OrderItem";
 
 const OrderScreen = (props) => {
-  const orders = useSelector((state) => state.orders.order);
+  const orders = useSelector((state) => state.orders.orders);
   return (
     <View>
       <FlatList
