@@ -21,13 +21,15 @@ const CartItem = (props) => {
       </View>
       <View style={style.itemData}>
         <Text style={style.mainText}>${props.amount}</Text>
-        <TouchableOpacity onPress={props.onRemove} style={style.deleteButto}>
-          <Ionicons
-            name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
-            size={23}
-            color="red"
-          />
-        </TouchableOpacity>
+        {props.deletable && (
+          <TouchableOpacity onPress={props.onRemove} style={style.deleteButto}>
+            <Ionicons
+              name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
+              size={23}
+              color="red"
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -40,10 +42,10 @@ const style = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     padding: 10,
-    borderWidth : 1,
-    borderColor : 'black',
+    borderWidth: 1,
+    borderColor: "black",
     marginVertical: 6,
-    borderRadius : 7
+    borderRadius: 7,
   },
   itemData: {
     flexDirection: "row",

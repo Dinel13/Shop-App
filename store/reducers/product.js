@@ -7,6 +7,7 @@ const initialState = {
 };
 
 const productReducers = (state = initialState, action) => {
+  console.log(state.userProduct);
     return state;
 };
 

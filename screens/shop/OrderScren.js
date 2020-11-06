@@ -1,22 +1,27 @@
 import React from "react";
-import { StyleSheet, View, FlatList, Platform , Text} from "react-native";
+import { StyleSheet, View, FlatList, Platform, Text } from "react-native";
 import { useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import HeaderButtonCustm from "../../components/UI/HeaderButton";
 import OrderItem from "../../components/shop/OrderItem";
 
-
 const OrderScreen = (props) => {
   const orders = useSelector((state) => state.orders.order);
-  return (<View>
-      <Text>DADA</Text>
-    <FlatList
-      data={orders}
-      keyExtractor={(item) => item.id}
-      renderItem={(itemData) => <OrderItem amount={itemData.item.totalAmount} date={itemData.item.readableDate}/>}
-    />
-  </View>
+  return (
+    <View>
+      <FlatList
+        data={orders}
+        keyExtractor={(item) => item.id}
+        renderItem={(itemData) => (
+          <OrderItem
+            items={itemData.item.items}
+            amount={itemData.item.totalAmount}
+            date={itemData.item.readableDate}
+          />
+        )}
+      />
+    </View>
   );
 };
 
