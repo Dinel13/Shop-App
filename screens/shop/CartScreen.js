@@ -1,9 +1,13 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, FlatList} from 'react-native'
 
-const A = props => {
+const CartScreen = props => {
     return (
-        <View style={style.screen} ></View>
+        <View style={style.screen} >
+            <FlatList >
+                
+            </FlatList>
+        </View>
     )
 }
 
@@ -13,4 +17,4 @@ const style = StyleSheet.create({
     }
 })
 
-export default A;
+export default CartScreen

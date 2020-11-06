@@ -1,11 +1,16 @@
 import React from "react";
-import { FlatList } from "react-native";
-import { useSelector } from "react-redux";
+import { FlatList, Platform } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
+import HeaderButtonCustm from "../../components/UI/HeaderButton";
 import ProductItem from "../../components/shop/ProductItem";
+import { addToCart, ADD_TO_CART } from "../../store/action/actionCart";
 
 const ProductOverScreen = (props) => {
   const produts = useSelector((state) => state.products.availableProduct);
+  const dispatch = useDispatch();
+
   return (
     <FlatList
       data={produts}
@@ -16,12 +21,14 @@ const ProductOverScreen = (props) => {
           imageUrl={itemData.item.imageUrl}
           price={itemData.item.price}
           onViewDetail={() => {
-            props.navigation.navigate( 'ProductDetail', {
+            props.navigation.navigate("ProductDetail", {
               productId: itemData.item.id,
               productTitle: itemData.item.title,
             });
           }}
-          onAddToCart={() => {}}
+          onAddToCart={() => {
+            dispatch(addToCart(itemData.item));
+          }}
         />
       )}
     />
@@ -30,6 +37,7 @@ const ProductOverScreen = (props) => {
 
 ProductOverScreen.navigationOptions = {
   headerTitle: "All Product",
+
 };
 
 export default ProductOverScreen;
