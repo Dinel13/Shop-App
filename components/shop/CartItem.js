@@ -16,7 +16,7 @@ const CartItem = (props) => {
   return (
     <View style={style.cartItem}>
       <View style={style.itemData}>
-        <Text style={style.quantity}>{props.quantity}</Text>
+        <Text style={style.quantity}>{props.quantity} </Text>
         <Text style={style.mainText}>{props.title}</Text>
       </View>
       <View style={style.itemData}>
@@ -34,12 +34,16 @@ const CartItem = (props) => {
 };
 
 const style = StyleSheet.create({
-  CartItem: {
+  cartItem: {
     backgroundColor: "white",
     marginHorizontal: 20,
     justifyContent: "space-between",
     flexDirection: "row",
     padding: 10,
+    borderWidth : 1,
+    borderColor : 'black',
+    marginVertical: 6,
+    borderRadius : 7
   },
   itemData: {
     flexDirection: "row",
