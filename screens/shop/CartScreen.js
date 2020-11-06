@@ -46,7 +46,7 @@ const CartScreen = (props) => {
             onRemove={() => {}}
             />
           )}
-        />{" "}
+        />
       </View>
     </View>
   );
