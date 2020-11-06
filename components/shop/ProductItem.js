@@ -17,34 +17,23 @@ const ProductItem = (props) => {
   if (Platform.OS === "android") {
     ToucableView = TouchableNativeFeedback;
   }
-  
+
   return (
     <View style={style.product}>
-    <View style={style.toucable}>
-      <ToucableView onPress={props.onViewDetail} useForeground>
-        <View>
-        <View style={style.imageCointainer}>
-          <Image style={style.image} source={{ uri: props.imageUrl }} />
-        </View>
-        <View style={style.detail}>
-          <Text style={style.title}>{props.title}</Text>
-          <Text style={style.price}>${props.price}</Text>
-        </View>
-        <View style={style.action}>
-          <Button
-            color={Color.primary}
-            title="View Detail"
-            onPress={props.onViewDetail}
-          />
-          <Button
-            color={Color.primary}
-            title="To Cart"
-            onPress={props.onAddToCart}
-          />
-        </View>
-        </View>
-      </ToucableView>
-        </View>
+      <View style={style.toucable}>
+        <ToucableView onPress={props.onSelect} useForeground>
+          <View>
+            <View style={style.imageCointainer}>
+              <Image style={style.image} source={{ uri: props.imageUrl }} />
+            </View>
+            <View style={style.detail}>
+              <Text style={style.title}>{props.title}</Text>
+              <Text style={style.price}>${props.price}</Text>
+            </View>
+            <View style={style.action}>{props.children}</View>
+          </View>
+        </ToucableView>
+      </View>
     </View>
   );
 };
@@ -61,9 +50,9 @@ const style = StyleSheet.create({
     height: 300,
     margin: 20,
   },
-  toucable : {
+  toucable: {
     overflow: "hidden",
-    borderRadius : 10
+    borderRadius: 10,
   },
   imageCointainer: {
     width: "100%",
@@ -84,10 +73,10 @@ const style = StyleSheet.create({
   title: {
     fontSize: 18,
     marginVertical: 2,
-    fontFamily : 'open-sans-bold',
+    fontFamily: "open-sans-bold",
   },
   price: {
-    fontFamily : 'open-sans',
+    fontFamily: "open-sans",
     fontSize: 14,
     color: "#888",
   },
