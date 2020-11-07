@@ -6,11 +6,13 @@ import {
   View,
   Text,
   Platform,
+  Alert,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
 import HeaderButtonCustm from "../../components/UI/HeaderButton";
 import { updateProduct, createProduct } from "../../store/action/actionProduct";
+import { cos } from "react-native-reanimated";
 
 const EditProductSCreen = (props) => {
   const prodId = props.navigation.getParam("productId");
@@ -21,6 +23,7 @@ const EditProductSCreen = (props) => {
 
   const dispatch = useDispatch();
 
+  const [isTitleValid, setTitleIsValid] = useState(false);
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
   const [imageUrl, setImageUrl] = useState(
     editedProduct ? editedProduct.imageUrl : ""
@@ -31,6 +34,12 @@ const EditProductSCreen = (props) => {
   );
 
   const submitHandler = useCallback(() => {
+    if(!isTitleValid) {
+      Alert.alert('input salah', 'cek kembali' , [{
+        text: 'OKey'
+      }])
+      return
+    }
     if (editedProduct) {
       dispatch(updateProduct(prodId, title, description, imageUrl));
     } else {
@@ -44,6 +53,15 @@ const EditProductSCreen = (props) => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
+  const titleChangeHnadler = (text) => {
+    if (text.trim().lenght === 0) {
+      setTitleIsValid(false);
+    } else {
+      setTitleIsValid(true);
+    }
+    setTitle(text);
+  };
+
   return (
     <ScrollView>
       <View style={style.form}>
@@ -52,13 +70,14 @@ const EditProductSCreen = (props) => {
           <TextInput
             style={style.input}
             value={title}
-            onChangeText={(text) => setTitle(text)}
+            onChangeText={titleChangeHnadler}
             keyboardType="default"
             autoCapitalize="sentences"
             autoCorrect
             returnKeyType="next"
           />
         </View>
+        {!isTitleValid && <Text>title kosong</Text>}
         <View style={style.formControl}>
           <Text style={style.label}>ImageUrl</Text>
           <TextInput
