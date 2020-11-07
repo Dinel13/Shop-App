@@ -36,7 +36,7 @@ const EditProductSCreen = (props) => {
     } else {
       dispatch(createProduct(title, description, imageUrl, +price)); //+price menajdi numeric
     }
-    props.navigation.goBack()
+    props.navigation.goBack();
   }, [dispatch, prodId, title, description, imageUrl]);
 
   //submitHandler jadi dependensi supay hanya sekli di buat karen tidak pernah berubah
@@ -53,6 +53,10 @@ const EditProductSCreen = (props) => {
             style={style.input}
             value={title}
             onChangeText={(text) => setTitle(text)}
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            returnKeyType="next"
           />
         </View>
         <View style={style.formControl}>
@@ -70,6 +74,7 @@ const EditProductSCreen = (props) => {
               style={style.input}
               value={price}
               onChangeText={(text) => setPrice(text)}
+              keyboardType="decimal-pad"
             />
           </View>
         )}
