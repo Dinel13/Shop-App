@@ -10,6 +10,7 @@ import {
   Platform,
 } from "react-native";
 import Color from "../../constants/Color";
+import Card from "../UI/Card";
 
 const ProductItem = (props) => {
   let ToucableView = TouchableOpacity;
@@ -19,7 +20,7 @@ const ProductItem = (props) => {
   }
 
   return (
-    <View style={style.product}>
+    <Card style={style.product}>
       <View style={style.toucable}>
         <ToucableView onPress={props.onSelect} useForeground>
           <View>
@@ -34,19 +35,12 @@ const ProductItem = (props) => {
           </View>
         </ToucableView>
       </View>
-    </View>
+    </Card>
   );
 };
 
 const style = StyleSheet.create({
   product: {
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.26,
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: "white",
     height: 300,
     margin: 20,
   },

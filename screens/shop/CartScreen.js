@@ -6,6 +6,7 @@ import Color from "../../constants/Color";
 import { rempoveFromCart } from "../../store/action/actionCart";
 import { addOrder } from "../../store/action/actionOrder";
 import CartItem from "../../components/shop/CartItem";
+import Card from "../../components/UI/Card";
 
 const CartScreen = (props) => {
   const cartTotalAMount = useSelector((state) => state.cart.totalAmount);
@@ -26,10 +27,12 @@ const CartScreen = (props) => {
 
   return (
     <View style={style.screen}>
-      <FlatList></FlatList>
-      <View style={style.sumary}>
+      <Card style={style.sumary}>
         <Text style={style.texSumary}>
-          Total : <Text style={style.textAmount}>${cartTotalAMount}</Text>
+          Total :{" "}
+          <Text style={style.textAmount}>
+            ${Math.round(cartTotalAMount.toFixed(2) * 100) / 100}
+          </Text>
         </Text>
         <Button
           color={Color.accent}
@@ -39,7 +42,7 @@ const CartScreen = (props) => {
             dispatch(addOrder(cartItems, cartTotalAMount));
           }}
         />
-      </View>
+      </Card>
       <View>
         <FlatList
           data={cartItems}
@@ -62,8 +65,8 @@ const CartScreen = (props) => {
 };
 
 CartScreen.navigationOption = {
-  headerTitle : 'Your Cart'
-}
+  headerTitle: "Your Cart",
+};
 
 const style = StyleSheet.create({
   screen: {
@@ -75,13 +78,6 @@ const style = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 20,
     padding: 10,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.26,
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: "white",
   },
   texSumary: {
     fontFamily: "open-sans-bold",
