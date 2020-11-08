@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useReducer } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -14,6 +14,30 @@ import HeaderButtonCustm from "../../components/UI/HeaderButton";
 import { updateProduct, createProduct } from "../../store/action/actionProduct";
 import { cos } from "react-native-reanimated";
 
+const FORM_UPDATE = "UPDATE";
+const formReducer = (state, action) => {
+  if (action.type === FORM_UPDATE) {
+    const updateValuew = {
+      ...state.inputValue,
+      [action.input]: action.value,
+    };
+    const updateValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+    let updateFormIsValid = true;
+    for (const key in updateValidities) {
+      updateFormIsValid = updateFormIsValid && updateValidities[key];
+    }
+    return {
+      formIsValid: updateFormIsValid,
+      inputValidities: updateValidities,
+      inputValue: updateValuew,
+    };
+  }
+  return state;
+};
+
 const EditProductSCreen = (props) => {
   const prodId = props.navigation.getParam("productId");
 
@@ -21,45 +45,71 @@ const EditProductSCreen = (props) => {
     state.products.userProduct.find((prod) => prod.id === prodId)
   );
 
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValue: {
+      title: editedProduct ? editedProduct.title : "",
+      imageUrl: editedProduct ? editedProduct.imageUrl : "",
+      price: "",
+      description: editedProduct ? editedProduct.description : "",
+    },
+    inputValidities: {
+      title: editedProduct ? true : false,
+      imageUrl: editedProduct ? true : false,
+      price: editedProduct ? true : false,
+      description: editedProduct ? true : false,
+    },
+    formIsValid: editedProduct ? true : false,
+  });
+
   const dispatch = useDispatch();
 
-  const [isTitleValid, setTitleIsValid] = useState(false);
-  const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
-  const [imageUrl, setImageUrl] = useState(
-    editedProduct ? editedProduct.imageUrl : ""
-  );
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState(
-    editedProduct ? editedProduct.description : ""
-  );
-
   const submitHandler = useCallback(() => {
-    if(!isTitleValid) {
-      Alert.alert('input salah', 'cek kembali' , [{
-        text: 'OKey'
-      }])
-      return
+    if (!formState.formIsValid) {
+      Alert.alert("input salah", "cek kembali", [
+        {
+          text: "OKey",
+        },
+      ]);
+      return;
     }
     if (editedProduct) {
-      dispatch(updateProduct(prodId, title, description, imageUrl));
+      dispatch(
+        updateProduct(
+          prodId,
+          formState.inputValue.title,
+          formState.inputValue.description,
+          formState.inputValue.imageUrl
+        )
+      );
     } else {
-      dispatch(createProduct(title, description, imageUrl, +price)); //+price menajdi numeric
+      dispatch(
+        createProduct(
+          formState.inputValue.title,
+          formState.inputValue.description,
+          formState.inputValue.imageUrl,
+          +formState.inputValue.price //+price menajdi numeric
+        )
+      ); 
     }
     props.navigation.goBack();
-  }, [dispatch, prodId, title, description, imageUrl]);
+  }, [dispatch, prodId, formState]);
 
   //submitHandler jadi dependensi supay hanya sekli di buat karen tidak pernah berubah
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
-  const titleChangeHnadler = (text) => {
-    if (text.trim().lenght === 0) {
-      setTitleIsValid(false);
-    } else {
-      setTitleIsValid(true);
+  const textChangeHnadler = (inputType, text) => {
+    let isValid = false;
+    if (text.trim().length > 0) {
+      isValid = true;
     }
-    setTitle(text);
+    dispatchFormState({
+      type: FORM_UPDATE,
+      value: text,
+      isValid: isValid,
+      input: inputType,
+    });
   };
 
   return (
@@ -69,21 +119,21 @@ const EditProductSCreen = (props) => {
           <Text style={style.label}>Title</Text>
           <TextInput
             style={style.input}
-            value={title}
-            onChangeText={titleChangeHnadler}
+            value={formState.inputValue.title}
+            onChangeText={textChangeHnadler.bind(this, "title")}
             keyboardType="default"
             autoCapitalize="sentences"
             autoCorrect
             returnKeyType="next"
           />
         </View>
-        {!isTitleValid && <Text>title kosong</Text>}
+        {!formState.inputValidities.title && <Text>title kosong</Text>}
         <View style={style.formControl}>
           <Text style={style.label}>ImageUrl</Text>
           <TextInput
             style={style.input}
-            value={imageUrl}
-            onChangeText={(text) => setImageUrl(text)}
+            value={formState.inputValue.imageUrl}
+            onChangeText={textChangeHnadler.bind(this, "imageUrl")}
           />
         </View>
         {editedProduct ? null : (
@@ -91,8 +141,8 @@ const EditProductSCreen = (props) => {
             <Text style={style.label}>Price</Text>
             <TextInput
               style={style.input}
-              value={price}
-              onChangeText={(text) => setPrice(text)}
+              value={formState.inputValue.price}
+              onChangeText={textChangeHnadler.bind(this, "price")}
               keyboardType="decimal-pad"
             />
           </View>
@@ -101,8 +151,8 @@ const EditProductSCreen = (props) => {
           <Text style={style.label}>Description</Text>
           <TextInput
             style={style.input}
-            value={description}
-            onChangeText={(text) => setDescription(text)}
+            value={formState.inputValue.description}
+            onChangeText={textChangeHnadler.bind(this, "description")}
           />
         </View>
       </View>
