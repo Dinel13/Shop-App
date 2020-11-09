@@ -25,7 +25,7 @@ const ProductOverScreen = (props) => {
   const dispatch = useDispatch();
 
   const loadProduct = useCallback(async () => {
-    seterror(null)
+    seterror(null);
     setisLoading(true);
     try {
       await dispatch(fetchProduct());
@@ -38,6 +38,13 @@ const ProductOverScreen = (props) => {
   useEffect(() => {
     loadProduct();
   }, [loadProduct, dispatch]);
+
+  useEffect(() => {
+    const willFocusSub = props.navigation.addListener("willFocus", loadProduct);
+    return () => {
+      willFocusSub.remove()
+    }
+  }, [loadProduct]);
 
   const selectItemHandler = (id, title) => {
     props.navigation.navigate("ProductDetail", {

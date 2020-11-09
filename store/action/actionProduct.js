@@ -13,8 +13,8 @@ export const fetchProduct = () => {
         "https://rn-academind-db769.firebaseio.com/products.json"
       );
 
-      if(!response.ok) {
-        throw new Error('someting wrong')
+      if (!response.ok) {
+        throw new Error("someting wrong");
       }
 
       const resData = await response.json();
@@ -41,21 +41,49 @@ export const fetchProduct = () => {
 };
 
 export const deleteProduct = (productid) => {
-  return {
-    type: DELETE_PRODUCT,
-    pid: productid,
+  return async dispatch => {
+
+    await fetch(
+      `https://rn-academind-db769.firebaseio.com/products/${productid}.json`,
+      {
+        method: " DELETE",
+      }
+    );
+
+
+
+    dispatch({
+
+      type: DELETE_PRODUCT,
+      pid: productid,
+    })
   };
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
-  return {
-    type: UPDATE_PRODUCT,
-    pid: id,
-    productData: {
-      title,
-      description,
-      imageUrl,
-    },
+  
+  return async (dispatch) => {
+    await fetch(
+      `https://rn-academind-db769.firebaseio.com/products/${id}.json`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, description, imageUrl}),
+      }
+    );
+
+
+    dispatch({
+      type: UPDATE_PRODUCT,
+      pid: id,
+      productData: {
+        title,
+        description,
+        imageUrl,
+      },
+    });
   };
 };
 
