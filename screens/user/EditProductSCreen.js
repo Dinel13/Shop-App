@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,6 +14,7 @@ import HeaderButtonCustm from "../../components/UI/HeaderButton";
 import { updateProduct, createProduct } from "../../store/action/actionProduct";
 import { cos } from "react-native-reanimated";
 import Input from "../../components/UI/Input";
+import Color from "../../constants/Color";
 
 const FORM_UPDATE = "UPDATE";
 const formReducer = (state, action) => {
@@ -39,6 +41,9 @@ const formReducer = (state, action) => {
 };
 
 const EditProductSCreen = (props) => {
+  const [error, seterror] = useState();
+  const [isLoading, setisLoading] = useState(false);
+
   const prodId = props.navigation.getParam("productId");
 
   const editedProduct = useSelector((state) =>
@@ -63,7 +68,13 @@ const EditProductSCreen = (props) => {
 
   const dispatch = useDispatch();
 
-  const submitHandler = useCallback(() => {
+  useEffect(() => {
+    if (error) {
+      Alert.alert("aN ERROR TERJADI", error), [{ text: "OKay" }];
+    }
+  }, [error]);
+
+  const submitHandler = useCallback(async () => {
     if (!formState.formIsValid) {
       Alert.alert("input salah", "cek kembali", [
         {
@@ -72,26 +83,33 @@ const EditProductSCreen = (props) => {
       ]);
       return;
     }
-    if (editedProduct) {
-      dispatch(
-        updateProduct(
-          prodId,
-          formState.inputValue.title,
-          formState.inputValue.description,
-          formState.inputValue.imageUrl
-        )
-      );
-    } else {
-      dispatch(
-        createProduct(
-          formState.inputValue.title,
-          formState.inputValue.description,
-          formState.inputValue.imageUrl,
-          +formState.inputValue.price //+price menajdi numeric
-        )
-      );
+    seterror(null);
+    setisLoading(true);
+    try {
+      if (editedProduct) {
+        await dispatch(
+          updateProduct(
+            prodId,
+            formState.inputValue.title,
+            formState.inputValue.description,
+            formState.inputValue.imageUrl
+          )
+        );
+      } else {
+        await dispatch(
+          createProduct(
+            formState.inputValue.title,
+            formState.inputValue.description,
+            formState.inputValue.imageUrl,
+            +formState.inputValue.price //+price menajdi numeric
+          )
+        );
+      }
+      props.navigation.goBack();
+    } catch (error) {
+      seterror(error.message);
     }
-    props.navigation.goBack();
+    setisLoading(false);
   }, [dispatch, prodId, formState]);
 
   //submitHandler jadi dependensi supay hanya sekli di buat karen tidak pernah berubah
@@ -110,6 +128,14 @@ const EditProductSCreen = (props) => {
     },
     [dispatchFormState]
   );
+
+  if (isLoading) {
+    return (
+      <View style={style.centered}>
+        <ActivityIndicator size="large" color={Color.primary} />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -138,7 +164,7 @@ const EditProductSCreen = (props) => {
             errorText="masukkan image url yangb betul"
             keyboardType="default"
             onInputChange={inputChangeHnadler}
-            initialValue={editedProduct ? editedProduct.imageUrl: ""}
+            initialValue={editedProduct ? editedProduct.imageUrl : ""}
             initialValid={!!editedProduct}
             returnKeyType="next"
             required
@@ -200,6 +226,7 @@ const style = StyleSheet.create({
   form: {
     margin: 20,
   },
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
 
 export default EditProductSCreen;
