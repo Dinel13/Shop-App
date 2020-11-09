@@ -3,6 +3,7 @@ import {
   DELETE_PRODUCT,
   CREATE_PRODUCT,
   UPDATE_PRODUCT,
+  SET_PRODUCT,
 } from "../action/actionProduct";
 import Product from "../../models/product";
 
@@ -69,6 +70,14 @@ const productReducers = (state = initialState, action) => {
         availableProduct: updateAvailabelProduct,
         userProduct: updateUserProduct,
       };
+
+      case SET_PRODUCT : 
+      return  {
+        ...state,
+        availableProduct: action.products,
+        userProduct: action.products.filter((prod) => prod.ownerId === "u1"),
+      }
+
   }
   return state;
 };
