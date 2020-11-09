@@ -8,12 +8,11 @@ import {
 import Product from "../../models/product";
 
 const initialState = {
-  availableProduct: PRODUCTS,
+  availableProduct: [],
   userProduct: PRODUCTS.filter((prod) => prod.ownerId === "u1"),
 };
 
 const productReducers = (state = initialState, action) => {
-  console.log(state.userProduct);
   switch (action.type) {
     case DELETE_PRODUCT:
       return {
@@ -46,7 +45,6 @@ const productReducers = (state = initialState, action) => {
       const productIndex = state.userProduct.findIndex(
         (prod) => prod.id === action.pid
       );
-      console.log(productIndex);
       const updateProduct = new Product(
         action.pid,
         state.userProduct[productIndex].ownerId,
@@ -61,7 +59,6 @@ const productReducers = (state = initialState, action) => {
       const updateProductIndex = state.availableProduct.findIndex(
         (prod) => prod.id === action.pid
       );
-      console.log(updateUserProduct);
       const updateAvailabelProduct = [...state.availableProduct];
       updateAvailabelProduct[updateProductIndex] = updateProduct;
 
