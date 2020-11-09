@@ -2,9 +2,8 @@ import React, { useState, useCallback, useEffect, useReducer } from "react";
 import {
   StyleSheet,
   ScrollView,
-  TextInput,
   View,
-  Text,
+  KeyboardAvoidingView,
   Platform,
   Alert,
 } from "react-native";
@@ -13,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import HeaderButtonCustm from "../../components/UI/HeaderButton";
 import { updateProduct, createProduct } from "../../store/action/actionProduct";
 import { cos } from "react-native-reanimated";
+import Input from "../../components/UI/Input";
 
 const FORM_UPDATE = "UPDATE";
 const formReducer = (state, action) => {
@@ -89,7 +89,7 @@ const EditProductSCreen = (props) => {
           formState.inputValue.imageUrl,
           +formState.inputValue.price //+price menajdi numeric
         )
-      ); 
+      );
     }
     props.navigation.goBack();
   }, [dispatch, prodId, formState]);
@@ -99,64 +99,80 @@ const EditProductSCreen = (props) => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
-  const textChangeHnadler = (inputType, text) => {
-    let isValid = false;
-    if (text.trim().length > 0) {
-      isValid = true;
-    }
-    dispatchFormState({
-      type: FORM_UPDATE,
-      value: text,
-      isValid: isValid,
-      input: inputType,
-    });
-  };
+  const inputChangeHnadler = useCallback(
+    (inputType, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputType,
+      });
+    },
+    [dispatchFormState]
+  );
 
   return (
-    <ScrollView>
-      <View style={style.form}>
-        <View style={style.formControl}>
-          <Text style={style.label}>Title</Text>
-          <TextInput
-            style={style.input}
-            value={formState.inputValue.title}
-            onChangeText={textChangeHnadler.bind(this, "title")}
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={100}
+      style={{ flex: 1 }}
+    >
+      <ScrollView>
+        <View style={style.form}>
+          <Input
+            label="title"
+            id="title"
+            errorText="masukkan teks yangb betul"
             keyboardType="default"
             autoCapitalize="sentences"
             autoCorrect
             returnKeyType="next"
+            onInputChange={inputChangeHnadler}
+            initialValue={editedProduct ? editedProduct.title : ""}
+            initialValid={!!editedProduct}
+            required
           />
-        </View>
-        {!formState.inputValidities.title && <Text>title kosong</Text>}
-        <View style={style.formControl}>
-          <Text style={style.label}>ImageUrl</Text>
-          <TextInput
-            style={style.input}
-            value={formState.inputValue.imageUrl}
-            onChangeText={textChangeHnadler.bind(this, "imageUrl")}
+          <Input
+            label="imageUrl"
+            id="imageUrl"
+            errorText="masukkan image url yangb betul"
+            keyboardType="default"
+            onInputChange={inputChangeHnadler}
+            initialValue={editedProduct ? editedProduct.imageUrl: ""}
+            initialValid={!!editedProduct}
+            returnKeyType="next"
+            required
           />
-        </View>
-        {editedProduct ? null : (
-          <View style={style.formControl}>
-            <Text style={style.label}>Price</Text>
-            <TextInput
-              style={style.input}
-              value={formState.inputValue.price}
-              onChangeText={textChangeHnadler.bind(this, "price")}
+          {!editedProduct && (
+            <Input
+              label="price"
+              id="price"
+              errorText="masukkan angka harga yangb betul"
               keyboardType="decimal-pad"
+              onInputChange={inputChangeHnadler}
+              returnKeyType="next"
+              required
+              min={0.1}
             />
-          </View>
-        )}
-        <View style={style.formControl}>
-          <Text style={style.label}>Description</Text>
-          <TextInput
-            style={style.input}
-            value={formState.inputValue.description}
-            onChangeText={textChangeHnadler.bind(this, "description")}
+          )}
+          <Input
+            id="description"
+            label="description"
+            errorText="masukkan teks desciption yang betul"
+            onInputChange={inputChangeHnadler}
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            multiline
+            initialValue={editedProduct ? editedProduct.description : ""}
+            initialValid={!!editedProduct}
+            numberOfLine={3}
+            required
+            minLength={5}
           />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -183,19 +199,6 @@ EditProductSCreen.navigationOptions = (navData) => {
 const style = StyleSheet.create({
   form: {
     margin: 20,
-  },
-  formControl: {
-    width: "100%",
-  },
-  label: {
-    fontFamily: "open-sans-bold",
-    marginVertical: 8,
-  },
-  input: {
-    paddingHorizontal: 2,
-    paddingVertical: 5,
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 1,
   },
 });
 
