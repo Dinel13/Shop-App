@@ -13,7 +13,6 @@ const OrderScreen = (props) => {
 
   useEffect(() => {
     dispatch(fetchOrders());
-    console.log('dasdas');
   }, [dispatch]);
 
   return (

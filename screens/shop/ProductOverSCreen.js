@@ -21,29 +21,33 @@ import { color } from "react-native-reanimated";
 const ProductOverScreen = (props) => {
   const [error, seterror] = useState();
   const [isLoading, setisLoading] = useState(false);
+  const [isRefersing, setisrefresing] = useState(false);
   const produts = useSelector((state) => state.products.availableProduct);
   const dispatch = useDispatch();
 
   const loadProduct = useCallback(async () => {
     seterror(null);
-    setisLoading(true);
+    setisrefresing(true);
     try {
       await dispatch(fetchProduct());
     } catch (error) {
       seterror(error.message);
     }
-    setisLoading(false);
+    setisrefresing(false);
   }, [dispatch, seterror, setisLoading]);
 
   useEffect(() => {
-    loadProduct();
+    setisLoading(true);
+    loadProduct().then(() => {
+      setisLoading(false);
+    });
   }, [loadProduct, dispatch]);
 
   useEffect(() => {
     const willFocusSub = props.navigation.addListener("willFocus", loadProduct);
     return () => {
-      willFocusSub.remove()
-    }
+      willFocusSub.remove();
+    };
   }, [loadProduct]);
 
   const selectItemHandler = (id, title) => {
@@ -79,6 +83,8 @@ const ProductOverScreen = (props) => {
   }
   return (
     <FlatList
+      onRefresh={loadProduct}
+      refreshing={isRefersing}
       data={produts}
       keyExtractor={(item) => item.id}
       renderItem={(itemData) => (
