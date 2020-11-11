@@ -30,8 +30,10 @@ const StartScreen = (props) => {
         props.navigation.navigate("Auth");
         return;
       }
+
+      const exprationTime = expirationDate.getTime() - new Date().getTime();
       props.navigation.navigate("Shop");
-      dispatch(AuthWithData(userId, token));
+      dispatch(AuthWithData(userId, token, exprationTime));
     };
 
     tryLogin();
