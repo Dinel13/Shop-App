@@ -1,10 +1,12 @@
-import React, { useReducer, useState, useCallback } from "react";
+import React, { useReducer, useEffect, useState, useCallback } from "react";
 import {
   ScrollView,
   StyleSheet,
   Button,
   View,
+  Alert,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
@@ -40,6 +42,8 @@ const formReducer = (state, action) => {
 };
 
 const AuthScreen = (props) => {
+  const [isLoading, setisLoading] = useState(false);
+  const [error, setError] = useState();
   const [isSignup, setisSignup] = useState(false);
   const dispatch = useDispatch();
 
@@ -54,8 +58,13 @@ const AuthScreen = (props) => {
     },
     formIsValid: false,
   });
+  useEffect(() => {
+    if (error) {
+      Alert.alert("terjadi kesalahan", error, [{ text: "OKey" }]);
+    }
+  }, [error]);
 
-  const authHandler = () => {
+  const authHandler = async () => {
     let action;
     if (isSignup) {
       action = Signup(
@@ -65,7 +74,15 @@ const AuthScreen = (props) => {
     } else {
       action = Login(formState.inputValue.email, formState.inputValue.password);
     }
-    dispatch(action);
+
+    setError(null);
+    setisLoading(true);
+    try {
+      await dispatch(action);
+    } catch (err) {
+      setError(err.message);
+    }
+    setisLoading(false);
   };
 
   const inputChangeHnadler = useCallback(
@@ -113,11 +130,15 @@ const AuthScreen = (props) => {
               minLength={5}
             />
             <View style={style.buttonContain}>
-              <Button
-                title={isSignup ? "Sign up" : "Login"}
-                color={Color.primary}
-                onPress={authHandler}
-              />
+              {isLoading ? (
+                <ActivityIndicator size="small" color={Color.primary} />
+              ) : (
+                <Button
+                  title={isSignup ? "Sign up" : "Login"}
+                  color={Color.primary}
+                  onPress={authHandler}
+                />
+              )}
               <Button
                 title={`Switch to ${isSignup ? "Login" : "Sign Up "} `}
                 color={Color.accent}
