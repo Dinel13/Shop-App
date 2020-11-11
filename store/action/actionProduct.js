@@ -41,10 +41,10 @@ export const fetchProduct = () => {
 };
 
 export const deleteProduct = (productid) => {
-  return async dispatch => {
-
+  return async (dispatch, getState) => {
+  const token = getState().auth.token
     await fetch(
-      `https://rn-academind-db769.firebaseio.com/products/${productid}.json`,
+      `https://rn-academind-db769.firebaseio.com/products/${productid}.json?auth=${token}`,
       {
         method: " DELETE",
       }
@@ -62,9 +62,10 @@ export const deleteProduct = (productid) => {
 
 export const updateProduct = (id, title, description, imageUrl) => {
   
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token
     await fetch(
-      `https://rn-academind-db769.firebaseio.com/products/${id}.json`,
+      `https://rn-academind-db769.firebaseio.com/products/${id}.json?auth=${token}`,
       {
         method: "PATCH",
         headers: {
@@ -88,10 +89,12 @@ export const updateProduct = (id, title, description, imageUrl) => {
 };
 
 export const createProduct = (title, description, imageUrl, price) => {
-  return async (dispatch) => {
+  return async (dispatch , getState) => {
+    const token = getState().auth.token
+
     //code async
     const response = await fetch(
-      "https://rn-academind-db769.firebaseio.com/products.json",
+      `https://rn-academind-db769.firebaseio.com/products.json?auth=${token}`,
       {
         method: "POST",
         headers: {
