@@ -175,7 +175,7 @@ const style = StyleSheet.create({
     maxWidth: 400,
   },
   buttonContain: {
-    marginTop: 10,
+    padding:20
   },
 });
 
