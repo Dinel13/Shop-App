@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, Button, Alert } from "react-native";
+import { FlatList, Button, Alert, View, Text } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -28,6 +28,12 @@ const UserProductSCreen = (props) => {
       },
     ]);
   };
+
+  if (userProcuts.length === 0) {
+    return <View style={{flex : 1, justifyContent : 'center', alignItems:'center'}}>
+      <Text>Tidak ada produk, silahkan tambahkan</Text>
+    </View>
+  }
 
   return (
     <FlatList

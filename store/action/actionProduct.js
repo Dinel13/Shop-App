@@ -7,7 +7,9 @@ export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
 export const SET_PRODUCT = "SET_PRODUCT";
 
 export const fetchProduct = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
+
     try {
       const response = await fetch(
         "https://rn-academind-db769.firebaseio.com/products.json"
@@ -23,7 +25,7 @@ export const fetchProduct = () => {
         loadedProduct.push(
           new Product(
             key,
-            "u1",
+            resData[key].ownerId,
             resData[key].title,
             resData[key].imageUrl,
             resData[key].description,
@@ -32,7 +34,11 @@ export const fetchProduct = () => {
         );
       }
 
-      dispatch({ type: SET_PRODUCT, products: loadedProduct });
+      dispatch({
+        type: SET_PRODUCT,
+        products: loadedProduct,
+        userProducts: loadedProduct.filter((prod) => prod.ownerId === userId),
+      });
     } catch (err) {
       //send to custom analitic serever
       throw err;
@@ -42,7 +48,7 @@ export const fetchProduct = () => {
 
 export const deleteProduct = (productid) => {
   return async (dispatch, getState) => {
-  const token = getState().auth.token
+    const token = getState().auth.token;
     await fetch(
       `https://rn-academind-db769.firebaseio.com/products/${productid}.json?auth=${token}`,
       {
@@ -50,20 +56,16 @@ export const deleteProduct = (productid) => {
       }
     );
 
-
-
     dispatch({
-
       type: DELETE_PRODUCT,
       pid: productid,
-    })
+    });
   };
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
-  
   return async (dispatch, getState) => {
-    const token = getState().auth.token
+    const token = getState().auth.token;
     await fetch(
       `https://rn-academind-db769.firebaseio.com/products/${id}.json?auth=${token}`,
       {
@@ -71,10 +73,9 @@ export const updateProduct = (id, title, description, imageUrl) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, description, imageUrl}),
+        body: JSON.stringify({ title, description, imageUrl }),
       }
     );
-
 
     dispatch({
       type: UPDATE_PRODUCT,
@@ -89,8 +90,9 @@ export const updateProduct = (id, title, description, imageUrl) => {
 };
 
 export const createProduct = (title, description, imageUrl, price) => {
-  return async (dispatch , getState) => {
-    const token = getState().auth.token
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
 
     //code async
     const response = await fetch(
@@ -100,7 +102,13 @@ export const createProduct = (title, description, imageUrl, price) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, description, imageUrl, price }),
+        body: JSON.stringify({
+          title,
+          description,
+          imageUrl,
+          price,
+          ownerId: userId,
+        }),
       }
     );
 
@@ -113,6 +121,7 @@ export const createProduct = (title, description, imageUrl, price) => {
         description,
         imageUrl,
         price,
+        ownerId: userId,
       },
     });
   };
