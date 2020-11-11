@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer , useCallback} from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -7,12 +7,69 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useDispatch } from "react-redux";
 
 import Card from "../../components/UI/Card";
 import Input from "../../components/UI/Input";
 import Color from "../../constants/Color";
+import { Signup } from "../../store/action/AuthAction";
+
+const FORM_UPDATE = "UPDATE";
+
+const formReducer = (state, action) => {
+  if (action.type === FORM_UPDATE) {
+    const updateValuew = {
+      ...state.inputValue,
+      [action.input]: action.value,
+    };
+    const updateValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+    let updateFormIsValid = true;
+    for (const key in updateValidities) {
+      updateFormIsValid = updateFormIsValid && updateValidities[key];
+    }
+    return {
+      formIsValid: updateFormIsValid,
+      inputValidities: updateValidities,
+      inputValue: updateValuew,
+    };
+  }
+  return state;
+};
 
 const AuthScreen = (props) => {
+  const dispatch = useDispatch();
+
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValue: {
+      email : '',
+      password : ''
+    },
+    inputValidities: {
+      email : false,
+      password : false
+    },
+    formIsValid:  false,
+  });
+
+  const signupHandler = () => {
+    dispatch(Signup(formState.inputValue.email, formState.inputValue.password));
+  };
+
+  const inputChangeHnadler = useCallback(
+    (inputType, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputType,
+      });
+    },
+    [dispatchFormState]
+  );
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -29,8 +86,8 @@ const AuthScreen = (props) => {
               required
               email
               autoCapitalize="none"
-              errorMessage="masukkan email yang betul"
-              onInputChange={() => {}}
+              errorText="masukkan email yang betul"
+              onInputChange={inputChangeHnadler}
               initialValue=""
             />
             <Input
@@ -40,12 +97,13 @@ const AuthScreen = (props) => {
               required
               secureTextEntry
               autoCapitalize="none"
-              errorMessage="masukkan password yang betul"
-              onInputChange={() => {}}
+              errorText="masukkan password yang betul"
+              onInputChange={inputChangeHnadler}
               initialValue=""
+              minLength={5}
             />
             <View style={style.buttonContain}>
-              <Button title="LOGIN" color={Color.primary} onPress={() => {}} />
+              <Button title="LOGIN" color={Color.primary} onPress={signupHandler} />
               <Button
                 title="Switch to SIGN-UP"
                 color={Color.accent}
@@ -60,7 +118,7 @@ const AuthScreen = (props) => {
 };
 
 AuthScreen.navigationOptions = {
-  headerTitle: 'Autentication',
+  headerTitle: "Autentication",
 };
 
 const style = StyleSheet.create({
