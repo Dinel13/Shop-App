@@ -1,5 +1,12 @@
-export const SIGNUP = "SIGNUP";
-export const LOGIN = "LOGIN";
+import { AsyncStorage } from "react-native";
+
+//export const SIGNUP = "SIGNUP";
+//export const LOGIN = "LOGIN";
+export const AUTH_WITH_DATA = "AUTH_WITH_DATA";
+
+export const AuthWithData = (userId, token) => {
+  return { type: AUTH_WITH_DATA, token: token, userId: userId };
+};
 
 export const Signup = (email, password) => {
   return async (dispatch) => {
@@ -24,13 +31,18 @@ export const Signup = (email, password) => {
       let pesan = "masalah terjadi di server";
       if (errorId === "EMAIL_EXISTS") {
         pesan = "Email sudah digunakan";
-      } 
+      }
       throw new Error(pesan);
     }
 
-    const resData = await response.json(); 
+    const resData = await response.json();
     console.log(resData);
-    dispatch({ type: SIGNUP , token :resData.idToken, userId : resData.localId });
+    dispatch(AuthWithData(resData.localId, resData.idToken));
+    const expirationDate = new Date(
+      //dibungkus Date agar hasil kembali ke objek date
+      new Date().getTime() + parseInt(resData.expiresIn) * 1000 // dikali 1000 agar menjadi milisekon kareana getTime menghasilkan milisekon
+    );
+    saveDataToStrorage(resData.idToken, resData.localId, expirationDate);
   };
 };
 
@@ -64,7 +76,22 @@ export const Login = (email, password) => {
     }
 
     const resData = await response.json();
-    console.log(resData);
-    dispatch({ type: LOGIN, token :resData.idToken, userId : resData.localId }); 
+    dispatch(AuthWithData(resData.localId, resData.idToken));
+    const expirationDate = new Date(
+      //dibungkus Date agar hasil kembali ke objek date
+      new Date().getTime() + parseInt(resData.expiresIn) * 1000 // dikali 1000 agar menjadi milisekon kareana getTime menghasilkan milisekon
+    );
+    saveDataToStrorage(resData.idToken, resData.localId, expirationDate);
   };
+};
+
+const saveDataToStrorage = (token, userId, expirationDate) => {
+  AsyncStorage.setItem(
+    "userData", //sebagai keynya
+    JSON.stringify({
+      token: token,
+      userId: userId,
+      expDate: expirationDate.toISOString()
+    })
+  );
 };

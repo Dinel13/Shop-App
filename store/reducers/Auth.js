@@ -1,4 +1,4 @@
-import { LOGIN, Signup, SIGNUP } from "../action/AuthAction"
+import { AUTH_WITH_DATA} from "../action/AuthAction"
 
 const initState = {
     token : null,
@@ -7,6 +7,14 @@ const initState = {
 
 export default (state = initState , action) => {
     switch (action.type) {
+        case AUTH_WITH_DATA : {
+            return {
+                token : action.token,
+                userId : action.userId
+            }
+        }
+        /* 
+        TIDAK JADI DIPAKE KAREAB ISI NYA SAANA
         case LOGIN :
             return {
                 token : action.token,
@@ -16,7 +24,7 @@ export default (state = initState , action) => {
             return {
                 token : action.token,
                 userId : action.userId
-            }
+            } */
         default :
         return state
     }

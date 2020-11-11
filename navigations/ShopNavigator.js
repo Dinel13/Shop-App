@@ -13,6 +13,7 @@ import Color from "../constants/Color";
 import UserProductSCreen from "../screens/user/UserProductSCreen";
 import EditProductSCreen from "../screens/user/EditProductSCreen";
 import AuthScreen from "../screens/user/AuthScreen";
+import StartScreen from "../screens/StartupScreen";
 
 const navigationOptions = {
   headerStyle: {
@@ -106,6 +107,7 @@ const AuthNavigator = createStackNavigator({
 });
 
 const MainNavigator = createSwitchNavigator({
+  Startup : StartScreen,
   Auth: AuthNavigator,
   Shop: ShopNavigator,
 });
