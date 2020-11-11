@@ -11,7 +11,6 @@ import { useDispatch } from "react-redux";
 import { AuthWithData } from "../store/action/AuthAction";
 
 const StartScreen = (props) => {
-  console.log("asdasda");
   const dispatch = useDispatch();
   //tidak bisa useffect dikasi async jadi harus buat fungsi pembungkus di dalam
   useEffect(() => {

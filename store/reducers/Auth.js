@@ -1,4 +1,4 @@
-import { AUTH_WITH_DATA} from "../action/AuthAction"
+import { AUTH_WITH_DATA, LOGOUT} from "../action/AuthAction"
 
 const initState = {
     token : null,
@@ -13,6 +13,8 @@ export default (state = initState , action) => {
                 userId : action.userId
             }
         }
+        case LOGOUT :
+            return initState
         /* 
         TIDAK JADI DIPAKE KAREAB ISI NYA SAANA
         case LOGIN :
