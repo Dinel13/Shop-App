@@ -36,13 +36,10 @@ const ProductsOverviewScreen = props => {
   }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
-    const unsunscribe= props.navigation.addListener(
-      'focus',
-      loadProducts
-    );
+    const unsubscribe = props.navigation.addListener('focus', loadProducts);
 
     return () => {
-      unsunscribe();
+      unsubscribe();
     };
   }, [loadProducts]);
 
@@ -124,8 +121,7 @@ const ProductsOverviewScreen = props => {
   );
 };
 
-//HAYA DI EKSORT
-export const screenOption = navData => {
+export const screenOptions = navData => {
   return {
     headerTitle: 'All Products',
     headerLeft: () => (
@@ -152,7 +148,6 @@ export const screenOption = navData => {
     )
   };
 };
-
 
 const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' }
