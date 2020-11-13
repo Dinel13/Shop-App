@@ -124,10 +124,11 @@ const ProductsOverviewScreen = props => {
   );
 };
 
-ProductsOverviewScreen.navigationOptions = navData => {
+//HAYA DI EKSORT
+export const screenOption = navData => {
   return {
     headerTitle: 'All Products',
-    headerLeft: (
+    headerLeft: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Menu"
@@ -138,7 +139,7 @@ ProductsOverviewScreen.navigationOptions = navData => {
         />
       </HeaderButtons>
     ),
-    headerRight: (
+    headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Cart"
@@ -151,6 +152,7 @@ ProductsOverviewScreen.navigationOptions = navData => {
     )
   };
 };
+
 
 const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' }
